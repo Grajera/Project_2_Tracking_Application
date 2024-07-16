@@ -1,6 +1,8 @@
 package com.example.shippingsimulator
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -12,21 +14,22 @@ import java.io.File
 fun shippingSimulatorApp() {
     val shipmentTracker = ShipmentTracker.instance
     var trackingNumber by remember { mutableStateOf("") }
-    var shipments by remember { mutableStateOf(emptyList<Shipment>()) }
+    var shipments = remember { mutableStateListOf<Shipment>() }
 
     LaunchedEffect(Unit) {
+        // Register the listener to update shipments on changes
+        shipmentTracker.addShipmentUpdateListener { updatedShipments ->
+            shipments.clear()
+            shipments.addAll(updatedShipments)
+        }
+
         while (true) {
             delay(1000)
             try {
-                // Read the file contents
                 val fileContent = withContext(Dispatchers.IO) {
                     File("src/test.txt").readText()
                 }
-                // Process updates for shipments
-                shipmentTracker.processUpdates(fileContent)
-
-                // Refresh the list of shipments
-                shipments = shipmentTracker.getShipments()
+                shipmentTracker.processUpdates(fileContent) // Update tracked shipments
             } catch (e: Exception) {
                 println("Error reading file: ${e.message}")
             }
@@ -52,17 +55,18 @@ fun shippingSimulatorApp() {
                 }) {
                     Text("Remove Shipment")
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = {
-                    shipmentTracker.printShipmentStatus(trackingNumber)
-                }) {
-                    Text("Print Shipment Status")
-                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text("Tracked Shipments:")
-            shipments.forEach { shipment ->
-                shipmentCard(shipment)
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(shipments) { shipment ->
+                    key(shipment.id) {
+                        shipmentCard(shipment)
+                    }
+                }
             }
         }
     }
@@ -74,7 +78,7 @@ fun shipmentCard(shipment: Shipment) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = 4.dp // Use a fixed elevation instead of CardDefaults
+        elevation = 4.dp
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("Shipment ID: ${shipment.id}")
