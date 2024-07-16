@@ -16,11 +16,11 @@ class IntegrationTests {
             tracker.processUpdates(update)
         }
 
-        val shipment = tracker.getShipments().find { it.id == shipmentId }
+        val shipment = tracker.getShipments().find { it.getId() == shipmentId }
         assertNotNull(shipment)
-        assertEquals("shipped", shipment.status)
+        assertEquals("shipped", shipment.getStatus())
 
         tracker.stopTracking(shipmentId)
-        assertFalse(tracker.getShipments().any { it.id == shipmentId })
+        assertFalse(tracker.getShipments().any { it.getId() == shipmentId })
     }
 }

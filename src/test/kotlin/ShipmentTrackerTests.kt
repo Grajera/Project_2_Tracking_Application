@@ -12,7 +12,7 @@ class ShipmentTrackerTests {
         tracker.trackShipment(shipmentId)
 
         val trackedShipments = tracker.getShipments()
-        assertTrue(trackedShipments.any { it.id == shipmentId })
+        assertTrue(trackedShipments.any { it.getId() == shipmentId })
     }
 
     @Test
@@ -22,7 +22,7 @@ class ShipmentTrackerTests {
         tracker.stopTracking(shipmentId)
 
         val trackedShipments = tracker.getShipments()
-        assertFalse(trackedShipments.any { it.id == shipmentId })
+        assertFalse(trackedShipments.any { it.getId() == shipmentId })
     }
 
     @Test
@@ -35,10 +35,10 @@ class ShipmentTrackerTests {
             tracker.processUpdates(update)
         }
 
-        val shipment = tracker.getShipments().find { it.id == shipmentId }
+        val shipment = tracker.getShipments().find { it.getId() == shipmentId }
         println(shipment)
         assertNotNull(shipment)
-        assertEquals("shipped", shipment.status)
+        assertEquals("shipped", shipment.getStatus())
     }
 
     @Test
@@ -57,6 +57,6 @@ class ShipmentTrackerTests {
         }
 
         assertNotNull(updatedShipments)
-        assertTrue(updatedShipments!!.any { it.id == shipmentId && it.status == "shipped" })
+        assertTrue(updatedShipments!!.any { it.getId() == shipmentId && it.getStatus() == "shipped" })
     }
 }

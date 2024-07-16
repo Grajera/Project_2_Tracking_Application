@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ShipmentTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-07-16T07:31:01" hostname="DESKTOP-0OF3D0K" time="0.02">
+<testsuite name="ShipmentTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-07-16T21:46:08" hostname="DESKTOP-0OF3D0K" time="0.013">
   <properties/>
-  <testcase name="testAddNotes()" classname="ShipmentTests" time="0.014"/>
-  <testcase name="testGetFormattedExpectedDeliveryDate()" classname="ShipmentTests" time="0.001"/>
-  <testcase name="testAddUpdate()" classname="ShipmentTests" time="0.001"/>
+  <testcase name="testAddNotes()" classname="ShipmentTests" time="0.006"/>
+  <testcase name="testGetFormattedExpectedDeliveryDate()" classname="ShipmentTests" time="0.002"/>
+  <testcase name="testAddUpdate()" classname="ShipmentTests" time="0.002"/>
   <system-out><![CDATA[[Fragile]
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>

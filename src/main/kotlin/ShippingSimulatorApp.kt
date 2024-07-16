@@ -17,12 +17,12 @@ import java.util.*
 fun shippingSimulatorApp() {
     val shipmentTracker = ShipmentTracker.instance
     var trackingNumber by remember { mutableStateOf("") }
-    var shipments = remember { mutableStateListOf<Shipment>() }
+    val shipments = remember { mutableStateListOf<Shipment>() }
 
     LaunchedEffect(Unit) {
-        shipmentTracker.addShipmentUpdateListener { updatedShipment ->
+        shipmentTracker.addShipmentUpdateListener { updatedShipments ->
             shipments.clear()
-            shipments.addAll(updatedShipment) // Refresh the shipment list
+            shipments.addAll(updatedShipments) // Refresh the shipment list
         }
 
         while (true) {
@@ -51,12 +51,6 @@ fun shippingSimulatorApp() {
                 }) {
                     Text("Track Shipment")
                 }
-                Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = {
-                    shipmentTracker.stopTracking(trackingNumber)
-                }) {
-                    Text("Remove Shipment")
-                }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text("Tracked Shipments:")
@@ -65,7 +59,7 @@ fun shippingSimulatorApp() {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(shipments) { shipment ->
-                    key(shipment.id) {
+                    key(shipment.getId()) {
                         shipmentCard(shipment, shipmentTracker::stopTracking)
                     }
                 }
@@ -89,9 +83,9 @@ fun shipmentCard(shipment: Shipment, onRemoveShipment: (String) -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Shipment ID: ${shipment.id}", style = MaterialTheme.typography.h6)
+                Text("Shipment ID: ${shipment.getId()}", style = MaterialTheme.typography.h6)
                 Button(
-                    onClick = { onRemoveShipment(shipment.id) },
+                    onClick = { onRemoveShipment(shipment.getId()) },
                     modifier = Modifier
                         .padding(8.dp)
                 ) {
@@ -99,13 +93,22 @@ fun shipmentCard(shipment: Shipment, onRemoveShipment: (String) -> Unit) {
                 }
             }
             Spacer(modifier = Modifier.height(8.dp)) // Spacer for spacing between text and icon
-            Text("Status: ${shipment.status}", style = MaterialTheme.typography.body1)
-            Text("Location: ${shipment.location}", style = MaterialTheme.typography.body1)
+            Text("Status: ${shipment.getStatus()}", style = MaterialTheme.typography.body1)
+            Text("Location: ${shipment.getLocation()}", style = MaterialTheme.typography.body1)
             Text("Expected Delivery: ${shipment.getFormattedExpectedDeliveryDate()}", style = MaterialTheme.typography.body1)
-            Text("Notes: ${shipment.notes.joinToString(", ")}", style = MaterialTheme.typography.body2)
+            Text("Notes:", style = MaterialTheme.typography.h6)
+            Column(modifier = Modifier.padding(start = 16.dp)) {
+                shipment.getNotes().forEach { note ->
+                    Text(
+                        text = "- $note",
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(8.dp)) // Spacer for updates section
             Text("Updates:", style = MaterialTheme.typography.h6)
-            shipment.updates.forEach { update ->
+            shipment.getUpdates().forEach { update ->
                 Text("  - ${update.updateType} on ${formatTimestamp(update.timestamp)}", style = MaterialTheme.typography.body2)
             }
         }

@@ -8,6 +8,6 @@ class ShipmentObserver {
     }
 
     fun notifyAllListeners(shipments: List<Shipment>) {
-        listeners.forEach { it(shipments) }
+        listeners.forEach { it.invoke(shipments) }
     }
 }

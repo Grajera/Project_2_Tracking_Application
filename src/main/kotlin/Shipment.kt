@@ -4,15 +4,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class Shipment(
-    val id: String,
-    var status: String = "created",
-    var location: String = "Unknown",
-    var expectedDeliveryDate: Long = 0,
-    val notes: MutableList<String> = mutableListOf(),
-    val updates: MutableList<ShipmentUpdate> = mutableListOf()
+    private val id: String,
+    private var status: String = "created",
+    private var location: String = "Unknown",
+    private var expectedDeliveryDate: Long = 0,
+    private val notes: MutableList<String> = mutableListOf(),
+    private val updates: MutableList<ShipmentUpdate> = mutableListOf()
 ) {
-    private val dateFormat = SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a")
-
     fun addUpdate(update: ShipmentUpdate) {
         updates.add(update)
         when (update.updateType) {
@@ -31,6 +29,19 @@ data class Shipment(
     }
 
     fun getFormattedExpectedDeliveryDate(): String {
-        return dateFormat.format(Date(expectedDeliveryDate)) // Format the expected delivery date
+        val date = Date(expectedDeliveryDate)
+        val format = SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a", Locale.getDefault())
+        return format.format(date)
     }
+
+    fun getUpdates(): List<ShipmentUpdate> = updates
+
+    fun getNotes(): List<String> = notes
+
+    fun getLocation(): String = location
+
+    fun getStatus(): String = status
+
+    fun getId(): String = id
 }
+

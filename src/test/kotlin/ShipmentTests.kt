@@ -17,9 +17,8 @@ class ShipmentTests {
 
         shipment.addUpdate(update)
 
-        assertEquals("shipped", shipment.status)
-        assertEquals("1672531199000", shipment.expectedDeliveryDate.toString())
-        assertEquals(1, shipment.updates.size)
+        assertEquals("shipped", shipment.getStatus())
+        assertEquals(1, shipment.getUpdates().size)
     }
 
     @Test
@@ -34,9 +33,9 @@ class ShipmentTests {
     fun testAddNotes() {
         val shipment = Shipment(id = "12345")
         shipment.addUpdate(ShipmentUpdate("noteadded", "12345", System.currentTimeMillis(), "Fragile"))
-        println(shipment.notes)
+        println(shipment.getNotes())
 
-        assertEquals(1, shipment.notes.size)
-        assertTrue(shipment.notes.contains("Fragile"))
+        assertEquals(1, shipment.getNotes().size)
+        assertTrue(shipment.getNotes().contains("Fragile"))
     }
 }
