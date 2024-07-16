@@ -3,49 +3,73 @@ package com.example.shippingsimulator
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.*
+import java.io.File
 
 @Composable
-fun ShippingSimulatorApp() {
+fun shippingSimulatorApp() {
     val shipmentTracker = ShipmentTracker.instance
-    var trackingId by remember { mutableStateOf("") }
-    val shipments = shipmentTracker.getShipments()
+    var trackingNumber by remember { mutableStateOf("") }
+    var shipments by remember { mutableStateOf(emptyList<Shipment>()) }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Shipping Tracker")
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            try {
+                // Read the file contents
+                val fileContent = withContext(Dispatchers.IO) {
+                    File("src/test.txt").readText()
+                }
+                // Process updates for shipments
+                shipmentTracker.processUpdates(fileContent)
 
-        OutlinedTextField(
-            value = trackingId,
-            onValueChange = { trackingId = it },
-            label = { Text("Enter Tracking ID") }
-        )
-
-        Button(onClick = {
-            shipmentTracker.trackShipment(trackingId)
-        }) {
-            Text("Track")
+                // Refresh the list of shipments
+                shipments = shipmentTracker.getShipments()
+            } catch (e: Exception) {
+                println("Error reading file: ${e.message}")
+            }
         }
+    }
 
-        Button(onClick = {
-            shipmentTracker.stopTracking(trackingId)
-        }) {
-            Text("Stop Tracking")
-        }
-
-        shipments.forEach { shipment ->
-            ShipmentCard(shipment)
+    MaterialTheme {
+        Column(modifier = Modifier.padding(16.dp)) {
+            TextField(
+                value = trackingNumber,
+                onValueChange = { trackingNumber = it },
+                label = { Text("Enter Tracking Number") }
+            )
+            Row {
+                Button(onClick = {
+                    shipmentTracker.trackShipment(trackingNumber)
+                }) {
+                    Text("Track Shipment")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = {
+                    shipmentTracker.stopTracking(trackingNumber)
+                }) {
+                    Text("Remove Shipment")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(onClick = {
+                    shipmentTracker.printShipmentStatus(trackingNumber)
+                }) {
+                    Text("Print Shipment Status")
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Tracked Shipments:")
+            shipments.forEach { shipment ->
+                shipmentCard(shipment)
+            }
         }
     }
 }
 
 @Composable
-fun ShipmentCard(shipment: Shipment) {
+fun shipmentCard(shipment: Shipment) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

@@ -28,4 +28,8 @@ data class Shipment(
     fun getFormattedExpectedDeliveryDate(): String {
         return expectedDeliveryDate.toString() // You can format this as needed
     }
+
+    fun getShipmentStatus(): String {
+        return "Shipment ID: $id, Status: $status, Location: $location"
+    }
 }
