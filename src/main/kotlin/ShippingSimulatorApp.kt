@@ -5,19 +5,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
+import shipmentCard
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Composable
 fun shippingSimulatorApp() {
     val shipmentTracker = ShipmentTracker.instance
     var trackingNumber by remember { mutableStateOf("") }
     val shipments = remember { mutableStateListOf<Shipment>() }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
         shipmentTracker.addShipmentUpdateListener { updatedShipments ->
@@ -42,15 +41,32 @@ fun shippingSimulatorApp() {
         Column(modifier = Modifier.padding(16.dp)) {
             TextField(
                 value = trackingNumber,
-                onValueChange = { trackingNumber = it },
+                onValueChange = {
+                    trackingNumber = it
+                    errorMessage = null // Clear error message when tracking number changes
+                },
                 label = { Text("Enter Tracking Number") }
             )
             Row {
                 Button(onClick = {
-                    shipmentTracker.trackShipment(trackingNumber)
+                    // Check if the shipment exists before tracking
+                    val shipmentExists = shipmentTracker.doesShipmentExist(trackingNumber)
+                    if (shipmentExists) {
+                        shipmentTracker.trackShipment(trackingNumber)
+                    } else {
+                        errorMessage = "Shipment with ID $trackingNumber does not exist."
+                    }
                 }) {
                     Text("Track Shipment")
                 }
+            }
+            errorMessage?.let {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = it,
+                    color = MaterialTheme.colors.error,
+                    style = MaterialTheme.typography.body1
+                )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text("Tracked Shipments:")
@@ -67,58 +83,3 @@ fun shippingSimulatorApp() {
         }
     }
 }
-
-@Composable
-fun shipmentCard(shipment: Shipment, onRemoveShipment: (String) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        elevation = 8.dp, // Increased elevation for a shadow effect
-        shape = MaterialTheme.shapes.medium // Rounded corners
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text("Shipment ID: ${shipment.getId()}", style = MaterialTheme.typography.h6)
-                Button(
-                    onClick = { onRemoveShipment(shipment.getId()) },
-                    modifier = Modifier
-                        .padding(8.dp)
-                ) {
-                    Text("Remove")
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp)) // Spacer for spacing between text and icon
-            Text("Status: ${shipment.getStatus()}", style = MaterialTheme.typography.body1)
-            Text("Location: ${shipment.getLocation()}", style = MaterialTheme.typography.body1)
-            Text("Expected Delivery: ${shipment.getFormattedExpectedDeliveryDate()}", style = MaterialTheme.typography.body1)
-            Text("Notes:", style = MaterialTheme.typography.h6)
-            Column(modifier = Modifier.padding(start = 16.dp)) {
-                shipment.getNotes().forEach { note ->
-                    Text(
-                        text = "- $note",
-                        style = MaterialTheme.typography.body2,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(8.dp)) // Spacer for updates section
-            Text("Updates:", style = MaterialTheme.typography.h6)
-            shipment.getUpdates().forEach { update ->
-                Text("  - ${update.updateType} on ${formatTimestamp(update.timestamp)}", style = MaterialTheme.typography.body2)
-            }
-        }
-    }
-}
-
-private fun formatTimestamp(timestamp: Long): String {
-    val dateFormat = SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a", Locale.getDefault())
-    return dateFormat.format(Date(timestamp))
-}
-
-
-

@@ -1,10 +1,13 @@
 package com.example.shippingsimulator
 
+import java.io.File
+
 class ShipmentTracker private constructor() {
     private val shipments = mutableMapOf<String, Shipment>()
     private val trackedShipments = mutableSetOf<String>()
     private val updateIndices = mutableMapOf<String, Int>()
     private val shipmentObserver = ShipmentObserver()
+    private val validShipmentIds = mutableSetOf<String>()
 
     companion object {
         val instance: ShipmentTracker by lazy { ShipmentTracker() }
@@ -37,6 +40,7 @@ class ShipmentTracker private constructor() {
             val parts = line.split(",")
             if (parts.size < 3) return@forEach
             val update = ShipmentUpdate(parts[0], parts[1], parts[2].toLong(), parts.getOrNull(3))
+            validShipmentIds.add(parts[1])
             updatesMap.computeIfAbsent(update.shipmentId) { mutableListOf() }.add(update)
         }
 
@@ -55,6 +59,10 @@ class ShipmentTracker private constructor() {
                 }
             }
         }
+    }
+
+    fun doesShipmentExist(trackingNumber: String): Boolean {
+        return validShipmentIds.contains(trackingNumber)
     }
 
     fun addShipmentUpdateListener(listener: (List<Shipment>) -> Unit) {
