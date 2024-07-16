@@ -6,7 +6,10 @@ import androidx.compose.ui.window.application
 
 
 fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "Shipment Tracker Simulator"
+    ) {
         MaterialTheme {
             shippingSimulatorApp()
         }

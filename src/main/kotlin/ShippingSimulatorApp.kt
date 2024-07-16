@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
@@ -17,10 +18,9 @@ fun shippingSimulatorApp() {
     var shipments = remember { mutableStateListOf<Shipment>() }
 
     LaunchedEffect(Unit) {
-        // Register the listener to update shipments on changes
-        shipmentTracker.addShipmentUpdateListener { updatedShipments ->
+        shipmentTracker.addShipmentUpdateListener { updatedShipment ->
             shipments.clear()
-            shipments.addAll(updatedShipments)
+            shipments.addAll(updatedShipment) // Refresh the shipment list
         }
 
         while (true) {
@@ -29,7 +29,7 @@ fun shippingSimulatorApp() {
                 val fileContent = withContext(Dispatchers.IO) {
                     File("src/test.txt").readText()
                 }
-                shipmentTracker.processUpdates(fileContent) // Update tracked shipments
+                shipmentTracker.processUpdates(fileContent)
             } catch (e: Exception) {
                 println("Error reading file: ${e.message}")
             }
@@ -64,7 +64,7 @@ fun shippingSimulatorApp() {
             ) {
                 items(shipments) { shipment ->
                     key(shipment.id) {
-                        shipmentCard(shipment)
+                        shipmentCard(shipment, shipmentTracker::stopTracking)
                     }
                 }
             }
@@ -73,23 +73,42 @@ fun shippingSimulatorApp() {
 }
 
 @Composable
-fun shipmentCard(shipment: Shipment) {
+fun shipmentCard(shipment: Shipment, onRemoveShipment: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = 4.dp
+        elevation = 8.dp, // Increased elevation for a shadow effect
+        shape = MaterialTheme.shapes.medium // Rounded corners
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Shipment ID: ${shipment.id}")
-            Text("Status: ${shipment.status}")
-            Text("Location: ${shipment.location}")
-            Text("Expected Delivery: ${shipment.getFormattedExpectedDeliveryDate()}")
-            Text("Notes: ${shipment.notes.joinToString(", ")}")
-            Text("Updates:")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Shipment ID: ${shipment.id}", style = MaterialTheme.typography.h6)
+                Button(
+                    onClick = { onRemoveShipment(shipment.id) },
+                    modifier = Modifier
+                        .padding(8.dp)
+                ) {
+                    Text("Remove")
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp)) // Spacer for spacing between text and icon
+            Text("Status: ${shipment.status}", style = MaterialTheme.typography.body1)
+            Text("Location: ${shipment.location}", style = MaterialTheme.typography.body1)
+            Text("Expected Delivery: ${shipment.getFormattedExpectedDeliveryDate()}", style = MaterialTheme.typography.body1)
+            Text("Notes: ${shipment.notes.joinToString(", ")}", style = MaterialTheme.typography.body2)
+            Spacer(modifier = Modifier.height(8.dp)) // Spacer for updates section
+            Text("Updates:", style = MaterialTheme.typography.h6)
             shipment.updates.forEach { update ->
-                Text("  - ${update.updateType} on ${update.timestamp}")
+                Text("  - ${update.updateType} on ${update.timestamp}", style = MaterialTheme.typography.body2)
             }
         }
     }
 }
+
+
+
