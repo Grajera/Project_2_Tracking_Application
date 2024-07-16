@@ -61,7 +61,7 @@ class ShipmentTracker private constructor() {
         shipmentObserver.addListener(listener)
     }
 
-    private fun getShipments(): List<Shipment> = shipments.values.toList()
+    fun getShipments(): List<Shipment> = shipments.values.toList()
 
     private val updateStrategy: UpdateStrategy = ConcreteUpdateStrategy()
 }

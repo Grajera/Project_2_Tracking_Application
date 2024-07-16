@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.*
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun shippingSimulatorApp() {
@@ -104,10 +106,15 @@ fun shipmentCard(shipment: Shipment, onRemoveShipment: (String) -> Unit) {
             Spacer(modifier = Modifier.height(8.dp)) // Spacer for updates section
             Text("Updates:", style = MaterialTheme.typography.h6)
             shipment.updates.forEach { update ->
-                Text("  - ${update.updateType} on ${update.timestamp}", style = MaterialTheme.typography.body2)
+                Text("  - ${update.updateType} on ${formatTimestamp(update.timestamp)}", style = MaterialTheme.typography.body2)
             }
         }
     }
+}
+
+private fun formatTimestamp(timestamp: Long): String {
+    val dateFormat = SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a", Locale.getDefault())
+    return dateFormat.format(Date(timestamp))
 }
 
 
