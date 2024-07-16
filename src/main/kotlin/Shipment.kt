@@ -1,5 +1,8 @@
 package com.example.shippingsimulator
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 data class Shipment(
     val id: String,
     var status: String = "created",
@@ -8,6 +11,8 @@ data class Shipment(
     val notes: MutableList<String> = mutableListOf(),
     val updates: MutableList<ShipmentUpdate> = mutableListOf()
 ) {
+    private val dateFormat = SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a")
+
     fun addUpdate(update: ShipmentUpdate) {
         updates.add(update)
         when (update.updateType) {
@@ -26,10 +31,6 @@ data class Shipment(
     }
 
     fun getFormattedExpectedDeliveryDate(): String {
-        return expectedDeliveryDate.toString() // You can format this as needed
-    }
-
-    fun getShipmentStatus(): String {
-        return "Shipment ID: $id, Status: $status, Location: $location"
+        return dateFormat.format(Date(expectedDeliveryDate)) // Format the expected delivery date
     }
 }
