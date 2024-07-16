@@ -1,31 +1,28 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+package com.example.shippingsimulator
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+import kotlinx.coroutines.runBlocking
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text)
-        }
+fun main() = runBlocking {
+    val shipmentTracker = ShipmentTracker.instance
+    val fileContent = loadUpdatesFromFile("src/test.txt")
+    shipmentTracker.processUpdates(fileContent)
+
+    while (true) {
+        println("Enter a Tracking ID to track (or 'exit' to quit): ")
+        val trackingId = readLine() ?: break
+
+        if (trackingId.lowercase() == "exit") break
+
+        shipmentTracker.trackShipment(trackingId)
+        shipmentTracker.printShipmentStatus(trackingId)
     }
 }
 
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
+fun loadUpdatesFromFile(filePath: String): String {
+    return try {
+        java.io.File(filePath).readText()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        ""
     }
 }
