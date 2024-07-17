@@ -12,33 +12,54 @@ class ShipmentTrackerTests {
         tracker.trackShipment(shipmentId)
 
         val trackedShipments = tracker.getShipments()
-        assertTrue(trackedShipments.any { it.getId() == shipmentId })
+        assertTrue(tracker.doesShipmentExist(shipmentId))
     }
 
     @Test
     fun testStopTracking() {
         val shipmentId = "12345"
         tracker.trackShipment(shipmentId)
+        assertTrue(tracker.doesShipmentExist(shipmentId))
         tracker.stopTracking(shipmentId)
+        assertFalse(tracker.getShipments().any { it.getId() == shipmentId })
+    }
 
-        val trackedShipments = tracker.getShipments()
-        assertFalse(trackedShipments.any { it.getId() == shipmentId })
+    @Test
+    fun testTrackShipment_ExistingShipment() {
+        tracker.trackShipment("12345") // Assuming SH001 exists in the source
+        assertTrue(tracker.doesShipmentExist("12345"))
+        assertNotNull(tracker.getShipments().find { it.getId() == "12345" })
+    }
+
+    @Test
+    fun testTrackShipment_NonExistingShipment() {
+        tracker.trackShipment("INVALID_ID") // Assuming this does not exist
+        assertFalse(tracker.doesShipmentExist("INVALID_ID"))
+    }
+
+    @Test
+    fun testStopTracking_Success() {
+        val shipmentId = "12345"
+        tracker.trackShipment(shipmentId) // Track it first
+        assertTrue(tracker.doesShipmentExist(shipmentId))
+
+        tracker.stopTracking(shipmentId)
+        assertNull(tracker.getShipments().find { it.getId() == shipmentId })
     }
 
     @Test
     fun testProcessUpdates() {
-        val shipmentId = "12345"
-        tracker.trackShipment(shipmentId)
+        tracker.trackShipment("12345")
+        tracker.trackShipment("123456")
 
-        val update = "shipped,12345,1672531199000\n"
+        val mockFileContent = "shipped,12345,1652712855468,1652713940874\ndelivered,123456,1652712855468\n"
         runBlocking {
-            tracker.processUpdates(update)
+            tracker.processUpdates(mockFileContent)
         }
 
-        val shipment = tracker.getShipments().find { it.getId() == shipmentId }
-        println(shipment)
-        assertNotNull(shipment)
-        assertEquals("shipped", shipment.getStatus())
+        val shipments = tracker.getShipments()
+        assertEquals("shipped", shipments.find { it.getId() == "12345" }?.getStatus())
+        assertEquals("delivered", shipments.find { it.getId() == "123456" }?.getStatus())
     }
 
     @Test
@@ -58,5 +79,12 @@ class ShipmentTrackerTests {
 
         assertNotNull(updatedShipments)
         assertTrue(updatedShipments!!.any { it.getId() == shipmentId && it.getStatus() == "shipped" })
+    }
+
+    @Test
+    fun shipmentCard_DisplaysCorrectData() {
+        val shipment = Shipment("12345", "created", "Unknown", 0)
+        val formattedDate = shipment.getFormattedExpectedDeliveryDate()
+        assertEquals("Wed, Dec 31, 1969 17:00:00 PM", formattedDate) // Update based on your formatting
     }
 }

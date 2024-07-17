@@ -2,7 +2,7 @@ import com.example.shippingsimulator.*
 import kotlinx.coroutines.runBlocking
 import kotlin.test.*
 
-class IntegrationTests {
+class FullCycleTest {
 
     private val tracker = ShipmentTracker.instance
 

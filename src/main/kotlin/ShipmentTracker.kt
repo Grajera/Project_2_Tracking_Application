@@ -25,6 +25,7 @@ class ShipmentTracker private constructor() {
 
     fun stopTracking(id: String) {
         val shipment = shipments.remove(id)
+        //validShipmentIds.remove(id)
         trackedShipments.remove(id)
         updateIndices.remove(id)
         shipment?.let {
@@ -71,5 +72,5 @@ class ShipmentTracker private constructor() {
 
     fun getShipments(): List<Shipment> = shipments.values.toList()
 
-    private val updateStrategy: UpdateStrategy = ConcreteUpdateStrategy()
+    private val updateStrategy: UpdateStrategy = UpdateStrategy()
 }

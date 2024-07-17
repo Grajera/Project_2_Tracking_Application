@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ShipmentTrackerTests" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-07-16T21:46:08" hostname="DESKTOP-0OF3D0K" time="0.033">
+<testsuite name="ShipmentTrackerTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-07-17T02:58:45" hostname="DESKTOP-0OF3D0K" time="0.023">
   <properties/>
-  <testcase name="testProcessUpdates()" classname="ShipmentTrackerTests" time="0.022"/>
+  <testcase name="testProcessUpdates()" classname="ShipmentTrackerTests" time="0.002"/>
+  <testcase name="testStopTracking_Success()" classname="ShipmentTrackerTests" time="0.002"/>
   <testcase name="testTrackShipment()" classname="ShipmentTrackerTests" time="0.002"/>
-  <testcase name="testStopTracking()" classname="ShipmentTrackerTests" time="0.001"/>
+  <testcase name="testTrackShipment_ExistingShipment()" classname="ShipmentTrackerTests" time="0.001"/>
+  <testcase name="testStopTracking()" classname="ShipmentTrackerTests" time="0.002"/>
+  <testcase name="shipmentCard_DisplaysCorrectData()" classname="ShipmentTrackerTests" time="0.001"/>
   <testcase name="testObserverNotification()" classname="ShipmentTrackerTests" time="0.003"/>
-  <system-out><![CDATA[Shipment(id=12345, status=shipped, location=Unknown, expectedDeliveryDate=0, notes=[], updates=[ShipmentUpdate(updateType=shipped, shipmentId=12345, timestamp=1672531199000, otherInfo=null)])
-]]></system-out>
+  <testcase name="testTrackShipment_NonExistingShipment()" classname="ShipmentTrackerTests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
