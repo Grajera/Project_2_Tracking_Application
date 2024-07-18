@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ShipmentTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-07-17T02:58:45" hostname="DESKTOP-0OF3D0K" time="0.022">
+<testsuite name="ShipmentTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-07-18T16:53:04" hostname="DESKTOP-AI3FHDM" time="0.162">
   <properties/>
-  <testcase name="getUpdates_ReturnsGetUpdates()" classname="ShipmentTests" time="0.002"/>
-  <testcase name="getId_ReturnsGetId()" classname="ShipmentTests" time="0.001"/>
-  <testcase name="addUpdate_UpdatesStatus()" classname="ShipmentTests" time="0.002"/>
-  <testcase name="getLocation_ReturnsGetLocation()" classname="ShipmentTests" time="0.002"/>
-  <testcase name="addUpdate_CreatesShipment()" classname="ShipmentTests" time="0.002"/>
-  <testcase name="getFormattedExpectedDeliveryDate_ReturnsFormattedDate()" classname="ShipmentTests" time="0.002"/>
-  <testcase name="addUpdate_AddsNote()" classname="ShipmentTests" time="0.001"/>
+  <testcase name="getUpdates_ReturnsGetUpdates()" classname="ShipmentTests" time="0.02"/>
+  <testcase name="getId_ReturnsGetId()" classname="ShipmentTests" time="0.009"/>
+  <testcase name="addUpdate_UpdatesStatus()" classname="ShipmentTests" time="0.012"/>
+  <testcase name="getLocation_ReturnsGetLocation()" classname="ShipmentTests" time="0.01"/>
+  <testcase name="addUpdate_CreatesShipment()" classname="ShipmentTests" time="0.003"/>
+  <testcase name="getFormattedExpectedDeliveryDate_ReturnsFormattedDate()" classname="ShipmentTests" time="0.006"/>
+  <testcase name="addUpdate_AddsNote()" classname="ShipmentTests" time="0.016"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

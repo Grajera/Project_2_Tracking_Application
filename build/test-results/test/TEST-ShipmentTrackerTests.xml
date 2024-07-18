@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ShipmentTrackerTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-07-17T02:58:45" hostname="DESKTOP-0OF3D0K" time="0.023">
+<testsuite name="ShipmentTrackerTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-07-18T16:53:04" hostname="DESKTOP-AI3FHDM" time="0.186">
   <properties/>
-  <testcase name="testProcessUpdates()" classname="ShipmentTrackerTests" time="0.002"/>
-  <testcase name="testStopTracking_Success()" classname="ShipmentTrackerTests" time="0.002"/>
+  <testcase name="testProcessUpdates()" classname="ShipmentTrackerTests" time="0.051"/>
+  <testcase name="testStopTracking_Success()" classname="ShipmentTrackerTests" time="0.031"/>
   <testcase name="testTrackShipment()" classname="ShipmentTrackerTests" time="0.002"/>
-  <testcase name="testTrackShipment_ExistingShipment()" classname="ShipmentTrackerTests" time="0.001"/>
-  <testcase name="testStopTracking()" classname="ShipmentTrackerTests" time="0.002"/>
-  <testcase name="shipmentCard_DisplaysCorrectData()" classname="ShipmentTrackerTests" time="0.001"/>
-  <testcase name="testObserverNotification()" classname="ShipmentTrackerTests" time="0.003"/>
-  <testcase name="testTrackShipment_NonExistingShipment()" classname="ShipmentTrackerTests" time="0.001"/>
+  <testcase name="testTrackShipment_ExistingShipment()" classname="ShipmentTrackerTests" time="0.005"/>
+  <testcase name="testStopTracking()" classname="ShipmentTrackerTests" time="0.016"/>
+  <testcase name="shipmentCard_DisplaysCorrectData()" classname="ShipmentTrackerTests" time="0.007"/>
+  <testcase name="testObserverNotification()" classname="ShipmentTrackerTests" time="0.011"/>
+  <testcase name="testTrackShipment_NonExistingShipment()" classname="ShipmentTrackerTests" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

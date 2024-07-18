@@ -72,5 +72,5 @@ class ShipmentTracker private constructor() {
 
     fun getShipments(): List<Shipment> = shipments.values.toList()
 
-    private val updateStrategy: UpdateStrategy = UpdateStrategy()
+    private val updateStrategy: UpdateStrategy = ConcreteUpdateStrategy()
 }

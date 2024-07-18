@@ -1,5 +1,7 @@
 package com.example.shippingsimulator
 
-interface ConcreteUpdateStrategy {
-    fun execute(update: ShipmentUpdate, shipment: Shipment)
+class ConcreteUpdateStrategy : UpdateStrategy {
+    override fun execute(update: ShipmentUpdate, shipment: Shipment) {
+        shipment.addUpdate(update)
+    }
 }
