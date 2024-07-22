@@ -16,21 +16,21 @@ class ShipmentTracker private constructor() {
     fun trackShipment(id: String) {
         if (!shipments.containsKey(id)) {
             val shipment = ShipmentFactory.createShipment(id)
+            shipment.addShipmentUpdateListener {
+                notifyListeners()
+            }
             shipments[id] = shipment
             updateIndices[id] = 0
-            shipmentObserver.notifyAllListeners(getShipments())
+            notifyListeners()
         }
         trackedShipments.add(id)
     }
 
     fun stopTracking(id: String) {
         val shipment = shipments.remove(id)
-        //validShipmentIds.remove(id)
         trackedShipments.remove(id)
         updateIndices.remove(id)
-        shipment?.let {
-            shipmentObserver.notifyAllListeners(getShipments()) // Notify observers
-        }
+        notifyListeners()
     }
 
     suspend fun processUpdates(fileContent: String) {
@@ -52,10 +52,8 @@ class ShipmentTracker private constructor() {
                     val currentIndex = updateIndices[shipmentId] ?: 0
                     if (currentIndex < updates.size) {
                         val update = updates[currentIndex]
-                        updateStrategy.execute(update, it)
+                        it.addUpdate(update)
                         updateIndices[shipmentId] = currentIndex + 1
-                        // Notify observers of the update
-                        shipmentObserver.notifyAllListeners(getShipments())
                     }
                 }
             }
@@ -70,7 +68,9 @@ class ShipmentTracker private constructor() {
         shipmentObserver.addListener(listener)
     }
 
-    fun getShipments(): List<Shipment> = shipments.values.toList()
+    private fun notifyListeners() {
+        shipmentObserver.notifyAllListeners(getShipments())
+    }
 
-    private val updateStrategy: UpdateStrategy = ConcreteUpdateStrategy()
+    fun getShipments(): List<Shipment> = shipments.values.toList()
 }
