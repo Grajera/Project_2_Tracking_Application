@@ -22,6 +22,14 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
+
+    implementation("io.ktor:ktor-server-core:2.0.0")
+    implementation("io.ktor:ktor-server-netty:2.0.0")
+    implementation("io.ktor:ktor-serialization:2.0.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
+    implementation("io.ktor:ktor-server-content-negotiation:2.0.0")
+    testImplementation("io.ktor:ktor-server-tests:2.0.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.21")
 }
 
 tasks.test {

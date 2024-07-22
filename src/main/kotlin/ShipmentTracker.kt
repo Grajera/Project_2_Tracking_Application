@@ -1,6 +1,5 @@
 package com.example.shippingsimulator
-
-import java.io.File
+import Factories.*
 
 class ShipmentTracker private constructor() {
     private val shipments = mutableMapOf<String, Shipment>()
@@ -13,15 +12,20 @@ class ShipmentTracker private constructor() {
         val instance: ShipmentTracker by lazy { ShipmentTracker() }
     }
 
-    fun trackShipment(id: String) {
+    private val shipmentFactories: Map<String, ShipmentFactory> = mapOf(
+        "standard" to StandardShipmentFactory(),
+        "express" to ExpressShipmentFactory(),
+        "overnight" to OvernightShipmentFactory(),
+        "bulk" to BulkShipmentFactory()
+    )
+
+    fun trackShipment(id: String, type: String) {
         if (!shipments.containsKey(id)) {
-            val shipment = ShipmentFactory.createShipment(id)
-            shipment.addShipmentUpdateListener {
-                notifyListeners()
-            }
+            val factory = shipmentFactories[type] ?: throw IllegalArgumentException("Invalid shipment type")
+            val shipment = factory.createShipment(id)
             shipments[id] = shipment
             updateIndices[id] = 0
-            notifyListeners()
+            shipmentObserver.notifyAllListeners(getShipments())
         }
         trackedShipments.add(id)
     }
@@ -30,7 +34,9 @@ class ShipmentTracker private constructor() {
         val shipment = shipments.remove(id)
         trackedShipments.remove(id)
         updateIndices.remove(id)
-        notifyListeners()
+        shipment?.let {
+            shipmentObserver.notifyAllListeners(getShipments())
+        }
     }
 
     suspend fun processUpdates(fileContent: String) {
@@ -54,6 +60,7 @@ class ShipmentTracker private constructor() {
                         val update = updates[currentIndex]
                         it.addUpdate(update)
                         updateIndices[shipmentId] = currentIndex + 1
+                        shipmentObserver.notifyAllListeners(getShipments())
                     }
                 }
             }
@@ -64,12 +71,8 @@ class ShipmentTracker private constructor() {
         return validShipmentIds.contains(trackingNumber)
     }
 
-    fun addShipmentUpdateListener(listener: (List<Shipment>) -> Unit) {
+    fun addShipmentUpdateListener(listener: (List<Shipment>, Any?) -> Unit) {
         shipmentObserver.addListener(listener)
-    }
-
-    private fun notifyListeners() {
-        shipmentObserver.notifyAllListeners(getShipments())
     }
 
     fun getShipments(): List<Shipment> = shipments.values.toList()

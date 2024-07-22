@@ -19,9 +19,10 @@ fun shippingSimulatorApp() {
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        shipmentTracker.addShipmentUpdateListener { updatedShipments ->
+        shipmentTracker.addShipmentUpdateListener { updatedShipments, updateMessage ->
             shipments.clear()
             shipments.addAll(updatedShipments) // Refresh the shipment list
+            errorMessage = (updateMessage ?: "").toString() // Update the message
         }
 
         while (true) {
@@ -52,7 +53,7 @@ fun shippingSimulatorApp() {
                     // Check if the shipment exists before tracking
                     val shipmentExists = shipmentTracker.doesShipmentExist(trackingNumber)
                     if (shipmentExists) {
-                        shipmentTracker.trackShipment(trackingNumber)
+                        shipmentTracker.trackShipment(trackingNumber, "bulk")
                     } else {
                         errorMessage = "Shipment with ID $trackingNumber does not exist."
                     }
@@ -79,6 +80,10 @@ fun shippingSimulatorApp() {
                         shipmentCard(shipment, shipmentTracker::stopTracking)
                     }
                 }
+            }
+            if (!errorMessage.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Alert: $errorMessage", color = MaterialTheme.colors.error)
             }
         }
     }
