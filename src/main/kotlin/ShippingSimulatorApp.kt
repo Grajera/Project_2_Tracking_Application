@@ -53,7 +53,7 @@ fun shippingSimulatorApp() {
                     // Check if the shipment exists before tracking
                     val shipmentExists = shipmentTracker.doesShipmentExist(trackingNumber)
                     if (shipmentExists) {
-                        shipmentTracker.trackShipment(trackingNumber, "bulk")
+                        shipmentTracker.trackShipment(trackingNumber, "standard")
                     } else {
                         errorMessage = "Shipment with ID $trackingNumber does not exist."
                     }
