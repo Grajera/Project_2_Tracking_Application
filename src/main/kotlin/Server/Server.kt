@@ -3,37 +3,33 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.serialization.kotlinx.json.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
+import java.io.File
 
+object Server {
+    private suspend fun updateShipment(data: String) {
+        var shipmentTracker = ShipmentTracker.instance
+        data.replace(" ", "")
+        val shipmentAction = data.split(",")
+        shipmentTracker.processUpdates(data)
+    }
 
-class Server(private val shipmentTracker: ShipmentTracker) {
-    fun start() {
-        embeddedServer(Netty, port = 8080) {
-            install(ContentNegotiation) {
-                json(Json { prettyPrint = true })
-            }
+    fun startServer() {
+        embeddedServer(Netty, 8956) {
             routing {
-                post("/shipment/update") {
-                    val shipmentUpdate = call.receive<String>()
-                    print("Server received update: $shipmentUpdate")
-                    shipmentTracker.processUpdates(shipmentUpdate)
-                    call.respond(HttpStatusCode.OK, "Shipment updated")
+                get("/") {
+                    call.respondText(File("./src/main/web/index.html").readText(), ContentType.Text.Html)
+                }
+
+                post("/data") {
+                    val data = call.receiveText()
+                    println(data)
+                    updateShipment(data)
+                    call.respondText { "POST Data Successful" }
                 }
             }
-        }.start(wait = true)
+        }.start(wait = false)
     }
 }
-
-@Serializable
-data class ShipmentUpdateRequest(
-    val id: String,
-    val type: String,
-    val timestamp: Long,
-    val info: String?
-)

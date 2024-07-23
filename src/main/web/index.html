@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipment Updater</title>
+    <script type="text/javascript">
+        async function updateData() {
+            const inputData = document.getElementById("input").value;
+
+            try {
+                const response = await fetch("/data", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "text/plain"
+                    },
+                    body: inputData
+                });
+
+                if (response.ok) {
+                    const text = await response.text();
+                    alert(`Response from server: ${text}`);
+                } else {
+                    alert("Failed to update shipment.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while updating shipment.");
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Shipment Updater</h1>
+<div>
+    <label for="input">Enter Data:</label>
+    <input type="text" id="input">
+    <button onclick="updateData()">Update Shipment</button>
+</div>
+</body>
+</html>

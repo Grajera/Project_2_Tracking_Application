@@ -19,14 +19,8 @@ class ShipmentTracker private constructor() {
         "bulk" to BulkShipmentFactory()
     )
 
-    fun trackShipment(id: String, type: String) {
-        if (!shipments.containsKey(id)) {
-            val factory = shipmentFactories[type] ?: throw IllegalArgumentException("Invalid shipment type")
-            val shipment = factory.createShipment(id)
-            shipments[id] = shipment
-            updateIndices[id] = 0
-            shipmentObserver.notifyAllListeners(getShipments())
-        }
+    fun trackShipment(id: String) {
+        shipmentObserver.notifyAllListeners(getShipments())
         trackedShipments.add(id)
     }
 
@@ -47,6 +41,12 @@ class ShipmentTracker private constructor() {
             val parts = line.split(",")
             if (parts.size < 3) return@forEach
             val update = ShipmentUpdate(parts[0], parts[1], parts[2].toLong(), parts.getOrNull(3))
+            if (!shipments.containsKey(parts[1])) {
+                val factory = shipmentFactories[parts[3]] ?: throw IllegalArgumentException("Invalid shipment type")
+                val shipment = factory.createShipment(parts[1])
+                shipments[parts[1]] = shipment
+            }
+            updateIndices[parts[1]] = 0
             validShipmentIds.add(parts[1])
             updatesMap.computeIfAbsent(update.shipmentId) { mutableListOf() }.add(update)
         }

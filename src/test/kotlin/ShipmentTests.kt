@@ -8,14 +8,14 @@ class ShipmentTests {
     @Test
     fun addUpdate_CreatesShipment() {
         val shipment = Shipment("SH001")
-        shipment.addUpdate(`ShipmentUpdate.kt`("created", "12345", 1630000000))
+        shipment.addUpdate(ShipmentUpdate("created", "12345", 1630000000))
         assertEquals("created", shipment.getStatus())
     }
 
     @Test
     fun addUpdate_UpdatesStatus() {
         val shipment = Shipment("SH002")
-        shipment.addUpdate(`ShipmentUpdate.kt`( "shipped", "12345", 1630000000, "1630500000"))
+        shipment.addUpdate(ShipmentUpdate( "shipped", "12345", 1630000000, "1630500000"))
         assertEquals("shipped", shipment.getStatus())
         assertEquals("Mon, Jan 19, 1970 13:55:00 PM", shipment.getFormattedExpectedDeliveryDate())
     }
@@ -23,7 +23,7 @@ class ShipmentTests {
     @Test
     fun addUpdate_AddsNote() {
         val shipment = Shipment("12345")
-        shipment.addUpdate(`ShipmentUpdate.kt`( "noteadded", "12345", 1630000000, "Fragile"))
+        shipment.addUpdate(ShipmentUpdate( "noteadded", "12345", 1630000000, "Fragile"))
         assertEquals(listOf("Fragile"), shipment.getNotes())
     }
 
@@ -37,7 +37,7 @@ class ShipmentTests {
     @Test
     fun getLocation_ReturnsGetLocation() {
         val shipment = Shipment("12345", expectedDeliveryDate = 1630000000)
-        shipment.addUpdate(`ShipmentUpdate.kt`( "location", "12345", 1630000000, "Logan, Utah"))
+        shipment.addUpdate(ShipmentUpdate( "location", "12345", 1630000000, "Logan, Utah"))
         assertEquals("Logan, Utah", shipment.getLocation())
     }
 
@@ -51,8 +51,8 @@ class ShipmentTests {
     fun getUpdates_ReturnsGetUpdates() {
         // Arrange
         val shipment = Shipment(id = "12345")
-        val update1 = `ShipmentUpdate.kt`("12345", "shipped", System.currentTimeMillis())
-        val update2 = `ShipmentUpdate.kt`("12345", "delivered", System.currentTimeMillis())
+        val update1 = ShipmentUpdate("12345", "shipped", System.currentTimeMillis())
+        val update2 = ShipmentUpdate("12345", "delivered", System.currentTimeMillis())
 
         shipment.addUpdate(update1)
         shipment.addUpdate(update2)

@@ -1,7 +1,5 @@
 package com.example.shippingsimulator
 
-import Client
-import Server
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,17 +25,6 @@ fun shippingSimulatorApp() {
             errorMessage = (updateMessage ?: "").toString() // Update the message
 
         }
-        while (true) {
-            delay(1000)
-            try {
-                val fileContent = withContext(Dispatchers.IO) {
-                    File("src/test.txt").readText()
-                }
-                shipmentTracker.processUpdates(fileContent)
-            } catch (e: Exception) {
-                println("Error reading file: ${e.message}")
-            }
-        }
     }
 
     MaterialTheme {
@@ -55,7 +42,7 @@ fun shippingSimulatorApp() {
                     // Check if the shipment exists before tracking
                     val shipmentExists = shipmentTracker.doesShipmentExist(trackingNumber)
                     if (shipmentExists) {
-                        shipmentTracker.trackShipment(trackingNumber, "standard")
+                        shipmentTracker.trackShipment(trackingNumber)
                     } else {
                         errorMessage = "Shipment with ID $trackingNumber does not exist."
                     }

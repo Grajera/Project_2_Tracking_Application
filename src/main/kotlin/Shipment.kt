@@ -69,7 +69,7 @@ data class Shipment(
     }
 
     private fun validateShipment() {
-        val validationResult = shipmentType.validateDeliveryDate(expectedDeliveryDate, System.currentTimeMillis())
+        val validationResult = shipmentType.validateDeliveryDate(updates.last().timestamp, expectedDeliveryDate)
         if (!validationResult.isValid) {
             status = "abnormal"
             notifyObservers(validationResult.errorCode)
@@ -81,6 +81,9 @@ data class Shipment(
 
     private fun notifyObservers(errorCode: String? = null) {
         val message = errorCode?.let { shipmentType.getAbnormalMessage(it) } ?: ""
+        if (message != "") {
+            notes.add(message)
+        }
         shipmentObserver.notifyAllListeners(listOf(this), message)
     }
 }
