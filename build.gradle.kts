@@ -23,13 +23,21 @@ dependencies {
     implementation(compose.desktop.currentOs)
     testImplementation(kotlin("test"))
 
-    implementation("io.ktor:ktor-server-core:2.0.0")
-    implementation("io.ktor:ktor-server-netty:2.0.0")
-    implementation("io.ktor:ktor-serialization:2.0.0")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
-    implementation("io.ktor:ktor-server-content-negotiation:2.0.0")
+    implementation("io.ktor:ktor-server-core:2.3.12")
+    implementation("io.ktor:ktor-server-netty:2.3.12")
+    implementation("io.ktor:ktor-serialization:2.3.12")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.12")
+    implementation("io.ktor:ktor-server-content-negotiation:2.3.12")
+    implementation("io.ktor:ktor-server-websockets:2.3.12")
+    implementation("io.ktor:ktor-client-cio:2.3.12")
+    implementation("io.ktor:ktor-client-json:2.3.12")
+    implementation("io.ktor:ktor-client-logging:2.3.12")
+    implementation("io.ktor:ktor-client-serialization:2.3.12")
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
     testImplementation("io.ktor:ktor-server-tests:2.0.0")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.21")
+    testImplementation("io.ktor:ktor-server-test-host:2.3.12")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.3.12")
+    implementation("ch.qos.logback:logback-classic:1.2.6")
 }
 
 tasks.test {

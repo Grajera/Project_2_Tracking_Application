@@ -1,5 +1,7 @@
 package com.example.shippingsimulator
 
+import Client
+import Server
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,8 +25,8 @@ fun shippingSimulatorApp() {
             shipments.clear()
             shipments.addAll(updatedShipments) // Refresh the shipment list
             errorMessage = (updateMessage ?: "").toString() // Update the message
-        }
 
+        }
         while (true) {
             delay(1000)
             try {
