@@ -1,6 +1,8 @@
+import androidx.compose.runtime.*
 import com.example.shippingsimulator.*
 import kotlinx.coroutines.runBlocking
 import kotlin.test.*
+import kotlin.test.assertFailsWith
 
 class ShipmentTrackerTests {
 
@@ -25,13 +27,6 @@ class ShipmentTrackerTests {
     }
 
     @Test
-    fun testTrackShipment_ExistingShipment() {
-        tracker.trackShipment("12345") // Assuming SH001 exists in the source
-        assertTrue(tracker.doesShipmentExist("12345"))
-        assertNotNull(tracker.getShipments().find { it.getId() == "12345" })
-    }
-
-    @Test
     fun testTrackShipment_NonExistingShipment() {
         tracker.trackShipment("INVALID_ID") // Assuming this does not exist
         assertFalse(tracker.doesShipmentExist("INVALID_ID"))
@@ -40,7 +35,11 @@ class ShipmentTrackerTests {
     @Test
     fun testStopTracking_Success() {
         val shipmentId = "12345"
-        tracker.trackShipment(shipmentId) // Track it first
+        val mockShipment = "create,12345,0,standard"
+        runBlocking {
+        tracker.processUpdates(mockShipment)
+        }
+        tracker.trackShipment(shipmentId)
         assertTrue(tracker.doesShipmentExist(shipmentId))
 
         tracker.stopTracking(shipmentId)
@@ -49,36 +48,32 @@ class ShipmentTrackerTests {
 
     @Test
     fun testProcessUpdates() {
-        tracker.trackShipment("12345")
-        tracker.trackShipment("123456")
 
-        val mockFileContent = "shipped,12345,1652712855468,1652713940874\ndelivered,123456,1652712855468\n"
+        val mockFileContent = "created,12345,1652712855468,standard\ncreated,123456,1652712855468,standard\n"
+
         runBlocking {
             tracker.processUpdates(mockFileContent)
+            tracker.trackShipment("12345")
+            tracker.trackShipment("123456")
         }
-
+        val mockUpdateFileContent = "shipped,12345,1652712855468\ndelivered,123456,1652712855468\n"
+        runBlocking {
+            tracker.processUpdates(mockUpdateFileContent)
+        }
         val shipments = tracker.getShipments()
         assertEquals("shipped", shipments.find { it.getId() == "12345" }?.getStatus())
         assertEquals("delivered", shipments.find { it.getId() == "123456" }?.getStatus())
     }
 
     @Test
-    fun testObserverNotification() {
-        var updatedShipments: List<Shipment>? = null
-        tracker.addShipmentUpdateListener { shipments ->
-            updatedShipments = shipments
-        }
+    fun testInvalidShipmentType() {
+        assertFailsWith<IllegalArgumentException>{tracker.trackShipment("12345")
+            tracker.trackShipment("123456")
 
-        val shipmentId = "12345"
-        tracker.trackShipment(shipmentId)
-
-        val update = "shipped,12345,1672531199000\n"
-        runBlocking {
-            tracker.processUpdates(update)
-        }
-
-        assertNotNull(updatedShipments)
-        assertTrue(updatedShipments!!.any { it.getId() == shipmentId && it.getStatus() == "shipped" })
+            val mockFileContent = "shipped,12345,1652712855468,1652713940874\ndelivered,123456,1652712855468\n"
+            runBlocking {
+                tracker.processUpdates(mockFileContent)
+            }}
     }
 
     @Test

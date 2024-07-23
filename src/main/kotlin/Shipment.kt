@@ -49,7 +49,7 @@ data class Shipment(
     }
 
     fun getFormattedExpectedDeliveryDate(): String {
-        return SimpleDateFormat("dd-MM-yyyy HH-mm-ss").format(Date(expectedDeliveryDate))
+        return SimpleDateFormat("EEE, MMM dd, yyyy HH:mm:ss a").format(Date(expectedDeliveryDate))
     }
 
     fun setStatus(newStatus: String) {

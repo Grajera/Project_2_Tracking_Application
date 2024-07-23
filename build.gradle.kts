@@ -36,8 +36,6 @@ dependencies {
     implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
     testImplementation("io.ktor:ktor-server-tests:2.0.0")
     testImplementation("io.ktor:ktor-server-test-host:2.3.12")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:2.3.12")
-    implementation("ch.qos.logback:logback-classic:1.2.6")
 }
 
 tasks.test {

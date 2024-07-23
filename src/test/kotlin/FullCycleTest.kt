@@ -9,10 +9,11 @@ class FullCycleTest {
     @Test
     fun testFullCycle() {
         val shipmentId = "12345"
-        tracker.trackShipment(shipmentId, "regular")
-
-        val update = "shipped,12345,1672531199000\n"
+        var update = "created,12345,1672531199000,standard\n"
         runBlocking {
+            tracker.processUpdates(update)
+            tracker.trackShipment(shipmentId)
+            update = "shipped,12345,1672999999000\n"
             tracker.processUpdates(update)
         }
 
