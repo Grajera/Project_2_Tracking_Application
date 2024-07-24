@@ -1,6 +1,5 @@
 import com.example.shippingsimulator.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.Test
 
 class ShipmentTests {
