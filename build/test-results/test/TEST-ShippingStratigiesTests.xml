@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ShippingStratigiesTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-07-24T00:33:50" hostname="DESKTOP-0OF3D0K" time="0.05">
+<testsuite name="ShippingStratigiesTests" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-07-24T00:53:30" hostname="DESKTOP-0OF3D0K" time="0.018">
   <properties/>
-  <testcase name="testShipmentUpdate()" classname="ShippingStratigiesTests" time="0.05"/>
+  <testcase name="testLocationShipment()" classname="ShippingStratigiesTests" time="0.001"/>
+  <testcase name="testLostShipment()" classname="ShippingStratigiesTests" time="0.001"/>
+  <testcase name="testCreatedShipment()" classname="ShippingStratigiesTests" time="0.001"/>
+  <testcase name="testShipmentUpdate()" classname="ShippingStratigiesTests" time="0.001"/>
+  <testcase name="testDelayedShipment()" classname="ShippingStratigiesTests" time="0.005"/>
+  <testcase name="testCanceledShipment()" classname="ShippingStratigiesTests" time="0.001"/>
+  <testcase name="testNoteAddedToShipment()" classname="ShippingStratigiesTests" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

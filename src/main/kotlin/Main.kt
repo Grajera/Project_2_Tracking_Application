@@ -7,7 +7,6 @@ import Server
 
 
 fun main() = application {
-    val shipmentTracker = ShipmentTracker.instance
     Window(
         onCloseRequest = ::exitApplication,
         title = "Shipment Tracker Simulator"

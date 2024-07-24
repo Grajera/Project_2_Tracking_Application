@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ShipmentTypesTests" tests="8" skipped="0" failures="0" errors="0" timestamp="2024-07-24T00:53:30" hostname="DESKTOP-0OF3D0K" time="0.041">
+  <properties/>
+  <testcase name="testExpressShipmentType()" classname="ShipmentTypesTests" time="0.004"/>
+  <testcase name="testStandardShipmentType()" classname="ShipmentTypesTests" time="0.003"/>
+  <testcase name="testBulkShipmentTypeShippingTimeTooSoon()" classname="ShipmentTypesTests" time="0.005"/>
+  <testcase name="testOvernightShipmentType()" classname="ShipmentTypesTests" time="0.006"/>
+  <testcase name="testBulkShipmentType()" classname="ShipmentTypesTests" time="0.003"/>
+  <testcase name="testExpressShipmentTypeShippingTimeTooLate()" classname="ShipmentTypesTests" time="0.003"/>
+  <testcase name="testOvernightShipmentTypeShippingTimeTooLate()" classname="ShipmentTypesTests" time="0.003"/>
+  <testcase name="testOvernightShipmentTypeShippingTimeTooSoon()" classname="ShipmentTypesTests" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
